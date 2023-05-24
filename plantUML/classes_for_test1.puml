@@ -1,0 +1,83 @@
+@startuml Order taking classes
+class Order{
+    'so to keep the uid unique
+    OrderId:Guid
+    TotalTax:Decimal
+    OrderItems: List<OrderItem>
+    CustomeId: Guid
+    Decimal TotalAmount()
+    Decimal TotalTax()
+}
+class OrderItem{
+    OrderItemId: Guid
+    Quantity: Integer
+    UnitPrice: Decimal
+    UnitTax: Decimal
+    Decimal TotalTax()
+    Decimal TotalPrice()
+    ProductId: Guid
+}
+
+'contains the catalog of items
+class Product{
+    ProductId: Guid
+    ProductName: String
+    Price: Decimal
+    Tax: Decimal
+    ImagePath: String
+}
+
+class Payment{
+    PaymentId: Guid
+    PaymentStatus: PaymentStatus
+    PaymentStatusType: PaymentType
+    Updated: DateTime
+    Amount: Decimal
+    OrderId: Guid
+}
+
+class Customer {
+    CustomerId: Guid
+    Name: String
+    Address: Address
+}
+
+class Address {
+    StreetLine1: String
+    StreetLine2: String
+    Zip: Zip
+    City: City
+    State: State
+    Country: Country
+}
+
+class Zip {
+    code: Integer
+}
+
+enum City {}
+enum State {}
+enum PaymentStatus {}
+enum PaymentType {}
+' enum PaymentStatus { inprogress, paid }
+' enum PaymentType { credit card, cash }
+
+'the relationship btw the product and the orderItem that is an agrigate
+OrderItem o-- Product
+
+
+' here we are defining a composition and it is one2many
+Order "1" *-- "n" OrderItem
+
+Payment o-- Order
+
+Order o-- Customer
+Customer *-- Address
+Address *-- City
+Address *-- Zip
+Address *--  State
+Payment *--  PaymentType
+Payment *-- PaymentStatus
+
+
+@enduml

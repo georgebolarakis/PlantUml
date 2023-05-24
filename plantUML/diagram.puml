@@ -1,0 +1,511 @@
+
+
+'https://plantuml.com/sequence-diagram
+
+@startuml Order Taking
+' to create a component diagram we need to include everything in brackets
+[Orders] -> [Menu]: use
+' for a dotted line
+[Orders] --> [Payments]: use
+
+[Customer ]-> [Orders]: use
+@enduml
+
+
+@startuml Some name
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: Another authentication Response
+@enduml
+
+' Declaring Participant
+@startuml Third Diagram
+participant Participant as Foo
+actor       Actor       as Foo1
+boundary    Boundary    as Foo2
+control     Control     as Foo3
+entity      Entity      as Foo4
+database    Database    as Foo5
+collections Collections as Foo6
+queue       Queue       as Foo7
+Foo -> Foo1 : To actor 
+Foo -> Foo2 : To boundary
+Foo -> Foo3 : To control
+Foo -> Foo4 : To entity
+Foo -> Foo5 : To database
+Foo -> Foo6 : To collections
+Foo -> Foo7: To queue
+@enduml
+
+'using color
+@startuml Color
+actor Bob #red
+' The only difference between actor
+'and participant is the drawing
+participant Alice
+participant "I have a really\nlong name" as L #99FF99
+/' You can also declare:
+   participant L as "I have a really\nlong name"  #99FF99
+  '/
+
+Alice-->Bob: Authentication Request
+Bob->Alice: Authentication Response
+Bob->L: Log transaction
+@enduml
+
+'using order
+@startuml Order
+participant Last order 3
+participant Middle order 2
+participant First order 1
+@enduml
+
+'multiline
+@startuml
+participant Participant [
+    =Title
+    ----
+    ""SubTitle""
+]
+
+participant Bob
+
+Participant -> Bob
+@enduml
+
+'Non lettters to participants
+@startuml
+Alice -> "Bob()" : Hello
+"Bob()" -> "This is very\nlong" as Long
+' You can also declare:
+' "Bob()" -> Long as "This is very\nlong"
+Long --> "Bob()" : ok
+@enduml
+
+'Message to self
+@startuml
+Alice -> Alice: This is a signal to self.\nIt also demonstrates\nmultiline \ntext
+@enduml
+
+@startuml
+Alice <- Alice: This is a signal to self.\nIt also demonstrates\nmultiline \ntext
+@enduml
+
+'Text alignment
+@startuml
+skinparam sequenceMessageAlign left
+Bob -> Alice : Request
+Alice -> Bob : Response
+@enduml
+
+'response bellow arrow
+@startuml bellow arrow
+skinparam responseMessageBelowArrow true
+Bob -> Alice : hello
+Alice -> Bob : ok
+@enduml
+
+' arrow style
+@startuml Arrow style
+Bob ->x Alice
+Bob -> Alice
+Bob ->> Alice
+Bob -\ Alice
+Bob \\- Alice
+Bob //-- Alice
+
+Bob ->o Alice
+Bob o\\-- Alice
+
+Bob <-> Alice
+Bob <->o Alice
+@enduml
+
+'arrow color
+@startuml
+Bob -[#red]> Alice : hello
+Alice -[#0000FF]->Bob : ok
+@enduml
+
+'message sequence numbering
+@startuml
+autonumber
+Bob -> Alice : Authentication Request
+Bob <- Alice : Authentication Response
+
+autonumber 15
+Bob -> Alice : Another authentication Request
+Bob <- Alice : Another authentication Response
+
+autonumber 40 10
+Bob -> Alice : Yet another authentication Request
+Bob <- Alice : Yet another authentication Response
+
+@enduml
+
+@startuml
+autonumber "<b>[000]"
+Bob -> Alice : Authentication Request
+Bob <- Alice : Authentication Response
+
+autonumber 15 "<b>(<u>##</u>)"
+Bob -> Alice : Another authentication Request
+Bob <- Alice : Another authentication Response
+
+autonumber 40 10 "<font color=red><b>Message 0  "
+Bob -> Alice : Yet another authentication Request
+Bob <- Alice : Yet another authentication Response
+
+@enduml
+
+'stop resume
+@startuml
+autonumber 10 10 "<b>[000]"
+Bob -> Alice : Authentication Request
+Bob <- Alice : Authentication Response
+
+autonumber stop
+Bob -> Alice : dummy
+
+autonumber resume "<font color=red><b>Message 0  "
+Bob -> Alice : Yet another authentication Request
+Bob <- Alice : Yet another authentication Response
+
+autonumber stop
+Bob -> Alice : dummy
+
+autonumber resume 1 "<font color=blue><b>Message 0  "
+Bob -> Alice : Yet another authentication Request
+Bob <- Alice : Yet another authentication Response
+@enduml
+
+@startuml
+autonumber 1.1.1
+Alice -> Bob: Authentication request
+Bob --> Alice: Response
+
+autonumber inc A
+'Now we have 2.1.1
+Alice -> Bob: Another authentication request
+Bob --> Alice: Response
+
+autonumber inc B
+'Now we have 2.2.1
+Alice -> Bob: Another authentication request
+Bob --> Alice: Response
+
+autonumber inc A
+'Now we have 3.1.1
+Alice -> Bob: Another authentication request
+autonumber inc B
+'Now we have 3.2.1
+Bob --> Alice: Response
+@enduml
+
+@startuml
+autonumber 10
+Alice -> Bob
+note right
+  the <U+0025>autonumber<U+0025> works everywhere.
+  Here, its value is ** %autonumber% **
+end note
+Bob --> Alice: //This is the response %autonumber%//
+@enduml
+
+'title header footer
+@startuml
+
+header Page Header
+footer Page %page% of %lastpage%
+
+title Example Title
+
+Alice -> Bob : message 1
+Alice -> Bob : message 2
+
+@enduml
+
+@startuml
+
+Alice -> Bob : message 1
+Alice -> Bob : message 2
+
+newpage
+
+Alice -> Bob : message 3
+Alice -> Bob : message 4
+
+newpage A title for the\nlast page
+
+Alice -> Bob : message 5
+Alice -> Bob : message 6
+@enduml
+
+'Grouping messages
+@startuml
+Alice -> Bob: Authentication Request
+
+alt successful case
+
+    Bob -> Alice: Authentication Accepted
+
+else some kind of failure
+
+    Bob -> Alice: Authentication Failure
+    group My own label
+    Alice -> Log : Log attack start
+        loop 1000 times
+            Alice -> Bob: DNS Attack
+        end
+    Alice -> Log : Log attack end
+    end
+
+else Another type of failure
+
+   Bob -> Alice: Please repeat
+
+end
+@enduml
+
+@startuml
+Alice -> Bob: Authentication Request
+Bob -> Alice: Authentication Failure
+group My own label [My own label 2]
+    Alice -> Log : Log attack start
+    loop 1000 times
+        Alice -> Bob: DNS Attack
+    end
+    Alice -> Log : Log attack end
+end
+@enduml
+
+'notes on messages
+@startuml
+Alice->Bob : hello
+note left: this is a first note
+
+Bob->Alice : ok
+note right: this is another note
+
+Bob->Bob : I am thinking
+note left
+a note
+can also be defined
+on several lines
+end note
+@enduml
+
+'some other note
+@startuml
+participant Alice
+participant Bob
+note left of Alice #aqua
+This is displayed
+left of Alice.
+end note
+
+note right of Alice: This is displayed right of Alice.
+
+note over Alice: This is displayed over Alice.
+
+note over Alice, Bob #FFAAAA: This is displayed\n over Bob and Alice.
+
+note over Bob, Alice
+This is yet another
+example of
+a long note.
+end note
+@enduml
+
+'notes shapes
+@startuml
+caller -> server : conReq
+hnote over caller : idle
+caller <- server : conConf
+rnote over server
+ "r" as rectangle
+ "h" as hexagon
+endrnote
+rnote over server
+ this is
+ on several
+ lines
+endrnote
+hnote over caller
+ this is
+ on several
+ lines
+endhnote
+@enduml
+
+'note over all participants
+@startuml
+Alice->Bob:m1
+Bob->Charlie:m2
+note over Alice, Charlie: Old method for note over all part. with:\n ""note over //FirstPart, LastPart//"".
+note across: New method with:\n""note across""
+Bob->Alice
+hnote across:Note across all part.
+@enduml
+
+'notes aligned at the same lvl
+@startuml
+note over Alice : initial state of Alice
+/ note over Bob : initial state of Bob
+Bob -> Alice : hello
+@enduml
+
+'creole and html
+@startuml
+participant Alice
+participant "The **Famous** Bob" as Bob
+
+Alice -> Bob : hello --there--
+... Some ~~long delay~~ ...
+Bob -> Alice : ok
+note left
+  This is **bold**
+  This is //italics//
+  This is ""monospaced""
+  This is --stroked--
+  This is __underlined__
+  This is ~~waved~~
+end note
+
+Alice -> Bob : A //well formatted// message
+note right of Alice
+ This is <back:cadetblue><size:18>displayed</size></back>
+ __left of__ Alice.
+end note
+note left of Bob
+ <u:red>This</u> is <color #118888>displayed</color>
+ **<color purple>left of</color> <s:red>Alice</strike> Bob**.
+end note
+note over Alice, Bob
+ <w:#FF33FF>This is hosted</w> by <img sourceforge.jpg>
+end note
+@enduml
+
+'divider and separator
+@startuml
+
+== Initialization ==
+
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+== Repetition ==
+
+Alice -> Bob: Another authentication Request
+Alice <-- Bob: another authentication Response
+
+@enduml
+
+'reference
+@startuml
+participant Alice
+actor Bob
+
+ref over Alice, Bob : init
+
+Alice -> Bob : hello
+
+ref over Bob
+  This can be on
+  several lines
+end ref
+@enduml
+
+'Delay
+@startuml
+
+Alice -> Bob: Authentication Request
+...
+Bob --> Alice: Authentication Response
+...5 minutes later...
+Bob --> Alice: Good Bye !
+
+@enduml
+
+'text wraping
+@startuml
+skinparam maxMessageSize 50
+participant a
+participant b
+a -> b :this\nis\nmanually\ndone
+a -> b :this is a very long message on several words
+@enduml
+
+'space
+@startuml
+
+Alice -> Bob: message 1
+Bob --> Alice: ok
+|||
+Alice -> Bob: message 2
+Bob --> Alice: ok
+||45||
+Alice -> Bob: message 3
+Bob --> Alice: ok
+
+@enduml
+
+'lifeline activationand destruction
+@startuml
+participant User
+
+User -> A: DoWork
+activate A #FFBBBB
+
+A -> A: Internal call
+activate A #DarkSalmon
+
+A -> B: << createRequest >>
+activate B
+
+B --> A: RequestCreated
+deactivate B
+deactivate A
+A -> User: Done
+deactivate A
+
+@enduml
+
+
+@startuml
+autoactivate on
+alice -> bob : hello
+bob -> bob : self call
+bill -> bob #005500 : hello from thread 2
+bob -> george ** : create
+return done in thread 2
+return rc
+bob -> george !! : delete
+return success
+
+@enduml
+
+'return
+@startuml
+Bob -> Alice : hello
+activate Alice
+Alice -> Alice : some action
+return bye
+@enduml
+
+'participant creation
+@startuml
+Bob -> Alice : hello
+
+create Other
+Alice -> Other : new
+
+create control String
+Alice -> String
+note right : You can also put notes!
+
+Alice --> Bob : ok
+
+@enduml

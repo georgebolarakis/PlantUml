@@ -1,0 +1,21 @@
+' https://www.youtube.com/watch?v=AgvWwvFuHlE
+
+@startuml Order taking
+top to bottom direction
+rectangle {
+    usecase Customers
+    usecase Payments
+    usecase Menu
+}
+(customer)
+' rectangle customer{
+'     usecase Customers
+' }
+' to create a component diagram we need to include everything in brackets
+(Orders) --> [Menu] : use
+' for a dotted line
+' [Orders] ..> [Menu] : use
+[Orders] -> [Payments] : use
+customer --> Orders : use
+
+@enduml
