@@ -8,14 +8,721 @@ rectangle {
     usecase Menu
 }
 (customer)
-' rectangle customer{
-'     usecase Customers
-' }
-' to create a component diagram we need to include everything in brackets
 (Orders) --> [Menu] : use
 ' for a dotted line
 ' [Orders] ..> [Menu] : use
 [Orders] -> [Payments] : use
 customer --> Orders : use
+
+@enduml
+
+@startuml isString/isMap
+
+skinparam usecase {
+BackgroundColor Red
+}
+
+top to bottom direction
+rectangle {
+usecase Yes #palegreen;line:green;text:green
+usecase No 
+}
+
+[isString] --> Yes
+note bottom: Returns true
+
+isString --> No
+note bottom: Returns false
+
+[isMap] --> Yes
+
+isMap --> No
+
+@enduml
+
+
+@startuml isMap/isMap with colours
+if (isString) then (yes)
+  #palegreen:returns true;
+  stop
+  else (No)
+  #red:returns false;
+  stop
+endif
+
+if (isMap) then (yes)
+  #palegreen:returns true;
+  stop
+  else (No)
+  #red:returns false;
+  stop
+
+  
+endif
+
+
+' if (isString) then (yes)
+'   :returns true; 
+'   stop
+' else (no)
+'   :returns false;
+'   stop
+' endif
+
+' if (isMap) then (yes)
+'   :returns true;
+'   stop
+' else (no)
+'   :returns false;
+'   stop
+' endif
+
+@enduml
+
+@startuml isEqual
+
+if(Are Lists Equal) then (yes)
+#palegreen:returns true;
+  stop
+  else (No)
+  #red:returns false;
+  stop
+
+
+@enduml
+
+@startuml Consolidate User Lists
+if (Does Exist in the list) then
+  -[#blue]->
+  #palegreen:Yes;
+  -[#blue]-> We return it as is;
+else
+  -[#black]->
+  #red:No;
+  :We add it to a 'results';
+  :We Update the old object with the newly created object;
+-[#black]-> Update 'results';
+endif
+' -[#gray,bold]->
+' :Overwriten DB;
+@enduml
+
+
+@startuml test class
+class data_helper{
+    Function isString()
+    Function isMap()
+    Function consolidateUserLists()
+}
+@enduml
+
+@startuml test class1
+
+rectangle {
+    usecase [dataLanguageListFromData()]
+    usecase [DataLanguageList Class]
+    usecase [initiateDataFetch()]
+}
+
+@enduml
+
+
+
+
+@startuml test2
+title data_languages.ts;
+Class DataLanguageList{
+    Function initiateDataFetch()
+    Function getActiveFetches()
+    Function _constructUserLanguageList()
+    Function getAllLanguageCodes()
+    Function getLanguageCodes()
+}
+
+
+
+' package Functions {
+'     object initiateDataFetch
+'     object getActiveFetches 
+
+'     object _constructUserLanguageList
+'     object getAllLanguageCodes
+'     object getLanguageCodes
+'       }
+
+object dataLanguageListFromData {
+  Function:\nTo create the DataLanguageList object from some existing data
+}
+
+object initiateDataFetch {
+  Function:\nTo initiate the promise to fetch the data
+}
+
+object getActiveFetches {
+  Function:\nTo get a single promise wrapping all the active language fetch activities we can wait on
+}
+
+object _constructUserLanguageList {
+  Function:\nTo construct the lists of userUids and codes and populate our member data correctly
+}
+
+object getAllLanguageCodes {
+  Function:\nTo return a list of all the language codes in this object
+}
+
+object getLanguageCodes {
+  Function:\nTo return just the language codes from the specified collection
+}
+
+DataLanguageList o-- Functions
+@enduml
+
+
+@startuml
+package foo {
+    object baz
+}
+
+package bar {
+    map A {
+        b *-> foo.baz
+        c =>
+    }
+}
+
+A::c --> foo
+@enduml
+
+@startuml Data Store
+title data_store.ts
+package Functions {
+    ' object dataLanguageListFromData
+    object handleDelete
+    object fetch
+    object add
+    object create
+    object set
+    object markDel
+    object del
+    object clear
+      }
+
+object handleDelete {
+  Function:\nHandles the auto-delete of a document. If the doc state at 'cr_ste' is set to be 'delete' then this
+ \nfunction will delete the document. Returns if the calling function should proceed to work on this valid doc
+ \n(the return being 'created') or ignore this because it is deleted or will be deleted
+}
+
+object fetch {
+  Function:\nFetches the data specified from firebase, or null data if not there
+}
+
+object add {
+  Function:\nAdds new data to firebase
+}
+
+object create {
+  Function:\nCreates data in firebase document
+}
+
+object set {
+  Function:\nSets data to firebase document
+}
+
+object markDel {
+  Function:\nMarks an object for deletion in firebase in a way that will update any listening streams
+ \nthe individual change function will also delete this object so you don't have to call
+ \n[del] if you don't want to
+}
+
+object del {
+  Function:\nDeletes data from firebase
+}
+
+object clear {
+  Function:\nClears all data from a firebase collection
+}
+
+' DataLanguageList o-- Functions
+@enduml
+
+
+@startuml Environments
+title environments.ts
+package Functions {
+    object getGlobalEnvironment
+    object _createDefaultEnvironment
+    object processEnvrionmentChange
+      }
+
+object getGlobalEnvironment {
+  Function:\nGets the global environment to use to set things up}
+}
+object _createDefaultEnvironment {
+  Function:\nCreates the default global environment to use to set things up}
+}
+object processEnvrionmentChange {
+  Function:\nListens for the change of a document to be sure it is deleted when the delete is requested
+}
+@enduml
+
+@startuml Files
+title files.ts
+package Functions {
+    object processFileCreation
+    object processFileChange
+    object processFileDeletion
+      }
+
+object processFileCreation {
+  Function:\nGListens for the creation of a file and adds all the valid recepients so they can see it's arrival
+}
+object processFileChange {
+  Function:\nListens for the change of a document to ensure it is updated when a change is requested
+}
+object processFileDeletion {
+  Function:\nListens for the deletion of a file and deletes the cloud storage things associated with it
+}
+@enduml
+
+@startuml Fireblocks
+title fireblocks.ts
+Class FireblocksConnection{
+    FireblocksSDK sdk
+    String customerRef
+    String customerName
+    Bool idAutoFuel
+    Bool isHideVaults
+    Promise Environment
+    Promise isInitialising
+    
+}
+@enduml
+
+@startuml Folders
+title folders.ts
+package LocalFunctions {
+    object getAutoChatTitle
+    object deleteFolderAutoChats
+    object resolveFolderAutoChats 
+      }
+
+package CloudFunctions {
+    object processFolderCreation
+    object processFolderDeletion
+    object processFolderChange
+      }
+
+object processFolderCreation {
+  Function:\nListens for the creation of a folder and infomrs its ancestor that it exists now
+ }
+object processFolderDeletion {
+  Function:\n* Listens for the deletion of a folder and removes from the list of children on it's parent
+}
+object getAutoChatTitle {
+  Function:\nGets the title of the auto-chat we want to creat
+  }
+
+object deleteFolderAutoChats {
+  Function:\nLocal function to delete all existing auto-chats on a folder
+  }
+
+object resolveFolderAutoChats {
+  Function:\nLocal function that makes sure we have a chat for every agent on this folder 
+  \nand it has the correct title also,
+  \ncreates a single chatroom for all the 'operator' type users on this folder so ops planners,
+  \nagent coordinators, and clients can all talk if they are all on this network.
+ }
+
+object processFolderChange {
+  Function:\nListens for the change of a folder to be sure they are always translated etc
+  }
+@enduml
+
+@startuml
+package foo {
+    object baz
+}
+
+package bar {
+    map A {
+        b *-> foo.baz
+        c =>
+    }
+}
+
+A::c --> foo
+@enduml
+
+
+
+@startuml data_helper
+class data_helper{
+    Function isString()
+    Function isMap()
+    Function consolidateUserLists()
+}
+@enduml
+
+@startuml Data Helpers
+title data_helpers.ts
+package LocalFunctions {
+    object isString
+    object isMap
+    object cleanInputString 
+    object cleanInputStrings
+    object getListChanges
+    object listsEqual
+    object consolidateUserLists
+      }
+
+object isString {
+  Function:\nDetermines if something is a string, or something else
+}
+
+object isMap {
+  Function:\nDetermines if something is a map, or something else
+}
+
+object cleanInputString {
+  Function:\nReturns a string that is safe to store / process - stripped of dangerous chars
+}
+
+object cleanInputStrings {
+  Function:\nReturns a map of strings that are all safe to store / process - stripped of dangerous chars
+}
+
+object getListChanges {
+  Function:\nGets the changes between two lists of data
+}
+
+object listsEqual {
+  Function:\nCompares two arrays contents
+}
+
+object consolidateUserLists {
+  Function:\nTakes three lists of UID strings and return one without duplicates
+}
+@enduml
+
+
+@startuml Functions Crypto
+title functions_crypto.ts
+package LocalFunctions {
+    object createTronWallet
+    object checkWalletTrxLevel
+    object performUSDTTransfer 
+    object performUSDTPayment 
+    object createTaskPaymentReceipt 
+      }
+
+
+
+object createTronWallet {
+  Function:\nCreates a tron wallet for the specified user
+}
+
+object checkWalletTrxLevel {
+  Function:\nChecks the agent's wallet for enough TRX and if not enough, transfer some over
+}
+
+object performUSDTTransfer {
+  Function:\nMoves USDT from one user's wallet to another
+  }
+
+object performUSDTPayment {
+  Function:\nMoves USDT from a fund to a user's wallet
+  }
+
+object createTaskPaymentReceipt {
+  Function:\nCreates a receipt for this task payment transaction
+  }
+
+@enduml
+
+@startuml Functions
+title functions.ts
+
+package CloudFunctions {
+    object isTokenValid
+    object resolveIdToName
+    object createNewNetworkCode
+    object createNewUser
+    object deleteUserCredentials
+    object reportContributingTime 
+    object pulseLocationCollection
+    object moveFolder
+    object moveTask
+    object setMessageToRead
+    object revokeMessageAccess
+    object setMessageToHandled
+    object generateWallet
+    object createUserWallet
+    object recordUserMoneyTransfer
+    object recordTaskPayment
+    object refreshUserWalletBalance
+    object getWalletBalance
+    object directTransfer
+    object deleteFundObject
+    object createNetworkAgent
+      }
+
+object isTokenValid {
+  Function:\nA callable function for any user to see if their token is valid or not
+ }
+object resolveIdToName {
+  Function:\nA A callable function for admin users to create a new unique network code
+}
+object createNewNetworkCode {
+  Function:\nA callable function for admin users to create a new unique network code
+  }
+
+object createNewUser {
+  Function:\nA callable function for admins to create a new user with email and password
+  }
+
+object deleteUserCredentials {
+  Function:\nA callable function for admins to delete some user credentials
+  }
+
+object reportContributingTime {
+  Function:\nA callable function for any user (but agents really) to report the time they have contrubuted, ie
+ \nthe app was open on their device for this period of seconds
+  }
+
+ object pulseLocationCollection {
+  Function:\nA callable function for users to pulse the location reporting of agents
+}
+object moveFolder {
+  Function:\nA callable function for ops planners and admin to move a folder to a new location
+  }
+
+object moveTask {
+  Function:\nA callable function for ops planners and admin to move a task to a new location
+  }
+
+object setMessageToRead {
+  Function:\nA callable function for users to change the state of a message to have been read
+  }
+
+object revokeMessageAccess {
+  Function:\nA callable function for users to revoke their access to a particular message
+  }
+
+object setMessageToHandled {
+  Function:\nA callable function for users to change the state of a message to have been 'handled' or dealt with
+}
+object generateWallet {
+  Function:\nA callable function for users generate a new wallet, with the private key encrypted
+  }
+
+object createUserWallet {
+  Function:\nA callable function for users to generate a new wallet for themselves, with the private key hidden
+  }
+
+object recordUserMoneyTransfer {
+  Function:\nA callable function for users to record a payment from one user to a wallet ID
+  }
+
+object recordTaskPayment {
+  Function:\nA callable function for users to record a successful payment for a task
+  }
+
+object refreshUserWalletBalance {
+  Function:\nA callable function for users to record a successful payment for a task
+  }
+
+object getWalletBalance {
+  Function:\nA callable function for users to get the balance of any wallet address
+  }
+
+object directTransfer {
+  Function:\nA callable function for users to perform a direct wallet transfer of funds
+  }
+
+object deleteFundObject {
+  Function:\nA callable function for special admin users to delete an unwanted fund
+  }
+
+object createNetworkAgent {
+  Function:\nA callable function for users to escalate their permission to 'agent' with a valid network code
+  }
+@enduml
+
+@startuml Funds
+title funds.ts
+package CloudFunctions {
+    object processFundCreation
+    object processFundChange
+    object processFundDeletion
+      }
+
+object processFundCreation {
+  Function:\nListens for the creation of a fund
+  }
+
+object processFundChange {
+  Function:\nListens for the change of a document to be sure it is deleted when the delete is requested
+  }
+object processFundDeletion {
+  Function:\nListens for the deletion of a fund
+  }
+@enduml
+
+@startuml Index
+title index.ts
+
+package index{
+[./agent_coordinators] 
+[./agents] 
+[./backup] 
+[./clients] 
+[./contributions] 
+[./environments] 
+[./files] 
+[./folders] 
+[./functions] 
+[./funds] 
+[./messages] 
+[./network_codes] 
+[./ops_planners] 
+[./storage] 
+[./tasks] 
+[./users] 
+[./vaults] 
+[./wallets] 
+} 
+
+
+note as N #99FF99
+  All these modules are required and we export them
+  in the index.ts file
+end note
+
+@enduml
+
+@startuml Locations
+title locations.TabSize
+package localFunctions{
+    object processLocationUpdate
+
+}
+
+object processLocationUpdate{
+    Functions:\nProcesses incoming location updates for user into the latest user record
+}
+@enduml
+
+@startuml Messages
+title messages.ts
+package LocalFunctions {
+    object sendUserLocation
+    object postEventMessage
+    object postDeleteEventMessage
+      }
+
+package CloudFunctions {
+    object processTaskMessageCreation
+      }
+
+object sendUserLocation {
+  Function:\nSends the user location to the correct collection
+  }
+
+object postEventMessage {
+  Function:\nPosts a notification to the system to inform people of some important datastore event
+ \nnotifications are created in the system and are stored within the messages collection
+  }
+object postDeleteEventMessage {
+  Function:\nPost a notification to the system to inform everyone of a document being deleted
+  \nnotifications are created in the system and are stored within the messages collection
+  }
+
+object processTaskMessageCreation {
+  Function:\nListens for the creation of a message and add all the valid recepients so they can read them
+  }
+
+LocalFunctions --> CloudFunctions
+@enduml
+
+@startuml Rate Limiter
+title rate_limiter.ts
+
+  class RateLimiter{
+    Function clearQuotas()
+    Function recordUsageAndPossiblyReject()
+}
+package LocalFunctions {
+  
+
+object clearQuotas {
+  Function:\nClears all old quotas
+}
+
+object recordUsageAndPossiblyReject {
+  Function:\nRecords usage and depending on the record rejects it
+  }
+}
+
+RateLimiter --> recordUsageAndPossiblyReject
+RateLimiter --> clearQuotas
+@enduml
+
+@startuml Storage
+title storage.ts
+package LocalFunctions {
+    object updateFilesAccessMetadata
+    object updateFileAccessMetadata
+    object performVirusCheck
+      }
+
+package CloudFunctions {
+    object processFileUpload
+      }
+
+object updateFilesAccessMetadata {
+  Function:\nUpdates the metadata of a file (large and thumb) to allow all agents on this task to access
+  }
+
+object updateFileAccessMetadata {
+  Function:\nUpdates the metadata of a file in the cloud store to allow all agents on this task to access
+  }
+object performVirusCheck {
+  Function:\nPerforms a virus check and update the originating firebase file object with the results
+  }
+
+object processFileUpload {
+  Function:\nListens for when an object is stored in the cloud store so we can also place the same object
+ in a place that all agents can locate as well as the ops planner or agent coordinator that has uploaded it for a task
+  }
+
+@enduml
+
+@startuml Tasks
+title tasks.ts
+package LocalFunctions {
+    object createSingleChatTask
+      }
+
+package CloudFunctions {
+    object processTaskCreation
+    object processTaskDeletion
+    object processTaskChange
+      }
+
+object createSingleChatTask {
+  Function:\nCreates a chat task for a single agent under a folder
+  }
+
+object processTaskCreation {
+  Function:\nListens for the creation of a task and add to the list of tasks on the parent
+  }
+object processTaskDeletion {
+  Function:\nListens for the deletion of a task and remove from the list of tasks on the parent
+  }
+
+object processTaskChange {
+  Function:\nListens for the change of a task to be sure they are always in the agent's folder
+  }
 
 @enduml

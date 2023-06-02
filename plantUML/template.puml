@@ -1,0 +1,37 @@
+@startuml Folders
+title folders.ts
+package LocalFunctions {
+    object 
+    object 
+    object 
+      }
+
+package CloudFunctions {
+    object 
+    object 
+    object 
+      }
+
+object  {
+  Function:\n
+  }
+
+object  {
+  Function:\n
+  }
+object  {
+  Function:\n
+  }
+
+object  {
+  Function:\n
+  }
+
+object  {
+  Function:\n
+ }
+
+object  {
+  Function:\n
+  }
+@enduml
