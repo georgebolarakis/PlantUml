@@ -114,6 +114,12 @@ class data_helper{
     Function isMap()
     Function consolidateUserLists()
 }
+
+interface UserPermissionsDocument{
+        Timestamp cr_at
+        String cr_by
+        
+      }
 @enduml
 
 @startuml test class1
@@ -724,5 +730,96 @@ object processTaskDeletion {
 object processTaskChange {
   Function:\nListens for the change of a task to be sure they are always in the agent's folder
   }
+
+@enduml
+
+@startuml Users
+title users.ts
+package LocalFunctions {
+    object userTypeFromPermissions
+    object executiveUserTypeFromPermissions
+    object migrateUserAutoChats
+    object migrateUserCollections
+    object userPermissionsDocumentToList
+    object everythingBeforeAtSign
+      }
+
+package CloudFunctions {
+    object processUserDataChange
+    object processUserPermissionsChange
+    object beforeCreateUser
+    object createUserData
+    object deleteUserData
+      }
+
+interface UserPermissionsDocument {
+        Timestamp cr_at
+        String cr_by
+        Timestamp cr_mode
+        Number cr_ver
+        Bool isSpecial
+        Bool isSimulationController
+        Bool isAdmin
+        Bool isAnalyst
+        Bool isOpsPlanner
+        Bool isAgentCoordinator
+        Bool isClient
+        Bool isAgent
+      }
+
+object userTypeFromPermissions {
+  Function:\nGets the user permissions of a specific user
+  }
+
+object executiveUserTypeFromPermissions {
+  Function:\nets the executive user permissions of a specific user
+  }
+object migrateUserAutoChats {
+  Function:\nMigrates user auto-chat tasks from the previous permission type to the new permission type
+ \n E.g. If the user is upgraded from agent to ops planner, the auto-chat tasks will be migrated
+ \nso that the agents sub-collection within the tasks document will no longer contain that user UID
+ \n and the opsplanners collection will now include that user UID
+  }
+
+object migrateUserCollections {
+  Function:\nMigrates all the collection data for the user from their existing type document to the new type document
+  }
+
+object processUserDataChange {
+  Function:\nListens for changes to users data to be sure to keep it up-to-date
+ }
+
+object processUserPermissionsChange {
+  Function:\n Listen for changes to users permissions
+ \nThis cloud function is onWrite and will be called when a document is:
+ \ncreated, updated and deleted.
+  }
+
+object userPermissionsDocumentToList {
+  Function:\nAssigns the user specific permission/s 
+  }
+
+object beforeCreateUser {
+  Function:\nBlocks the creation of an auth account and the return of the auth token.
+ \nThis function is called when a user signs-in with a Google account for the first time.
+  }
+object createUserData {
+  Function:\nCreates user in database after the auth account has been created in Firebase.
+ \nThis is called after any user is created. E.g.Entry of user/pass in
+ \nFirebase Console, but also Google Sign-In. Called after [beforeCreateUser].
+ \nThis creates a new user account in the database with no data attached to them. It also
+ \nnotifies the admin team that the new user has been created.
+  }
+
+object everythingBeforeAtSign {
+  Function:\nChecks if there is an email present
+  }
+
+object deleteUserData {
+  Function:\nintercepts the call to delete a user to delete their user data along with it
+ }
+
+ UserPermissionsDocument --> userPermissionsDocumentToList
+ UserPermissionsDocument --> processUserPermissionsChange
 
 @enduml
