@@ -707,18 +707,18 @@ object processFileUpload {
 @startuml Tasks
 title tasks.ts
 package LocalFunctions {
-    object createSingleChatTask
+    object createSingleChatTask #99FF99
       }
 
-package CloudFunctions {
+package CloudFunctions  {
     object processTaskCreation
     object processTaskDeletion
     object processTaskChange
       }
 
-object createSingleChatTask {
+object createSingleChatTask  {
   Function:\nCreates a chat task for a single agent under a folder
-  }
+  } 
 
 object processTaskCreation {
   Function:\nListens for the creation of a task and add to the list of tasks on the parent
@@ -769,7 +769,7 @@ interface UserPermissionsDocument {
 
 object userTypeFromPermissions {
   Function:\nGets the user permissions of a specific user
-  }
+  } #99FF99
 
 object executiveUserTypeFromPermissions {
   Function:\nets the executive user permissions of a specific user
@@ -821,5 +821,38 @@ object deleteUserData {
 
  UserPermissionsDocument --> userPermissionsDocumentToList
  UserPermissionsDocument --> processUserPermissionsChange
+
+@enduml
+
+@startuml
+
+map Wallet {
+    privateKey=> String 
+    publicKey=>String 
+    address=>{base58:String, hex:String}
+    active=> Boolean
+}
+
+@enduml
+
+@startuml
+map Wallet {
+ String => privateKey
+ Germany => Berlin
+ String => publicKey
+}
+
+map Balance{ 
+    trx=>any
+    contract=>any
+}
+@enduml
+
+@startuml
+
+object user {
+  name = "Dummy"
+  id = 123
+}
 
 @enduml
