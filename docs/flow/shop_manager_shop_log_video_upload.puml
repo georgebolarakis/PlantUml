@@ -1,0 +1,28 @@
+@startuml
+skinparam BoxPadding 20
+skinparam ParticipantPadding 10
+'https://plantuml.com/sequence-diagram
+
+title "=Shop Manager Uploading Shop Log Video \n"
+
+actor Admin order 05
+box "Verasana"
+	participant App order 10
+	participant Server order 15
+	participant Database order 20
+end box
+
+box "Google Cloud Platform"
+	participant Trigger order 30
+	participant "Storage Bucket" as Storage order 35
+end box
+
+Admin --> App: Submits info \nfor shop log video
+App <-- Server: Returns signed URL
+App --> Storage: Uploads video
+Trigger <-- Storage: Receives trigger \n new asset created
+Server <-- Trigger: Sends new storage \nbucket asset event
+Server --> Database: Adds new record to \nMux table
+Server --> Database: Updates row for shop log\nin shop_log table
+Admin --> App: Proceeds to \n next step
+@enduml

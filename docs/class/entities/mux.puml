@@ -1,0 +1,14 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam roundcorner 12
+
+entity Mux {
+    id
+    status
+    publicUrl
+    metadata
+    muxPlaybackUrl
+}
+
+hide methods
+@enduml

@@ -1,0 +1,33 @@
+
+@startuml
+'https://plantuml.com/class-diagram
+skinparam roundcorner 12
+!include entities/user.puml
+!include entities/learning_group.puml
+!include entities/program/program.puml
+!include entities/program/module.puml
+!include entities/program/content.puml
+
+
+entity Review {
+id
+learner_id
+learning_group_id
+program_id
+module_id
+content_id
+submission_date
+submission_data
+review_date
+review_data
+}
+
+Review::learner_id "N" -- "1" User::id
+Review::learning_group_id "N" -- "1" LearningGroup::id
+Review::program_id "N" -- "1" Program::id
+Review::module_id "N" -- "1" Module::id
+Review::content_id "N" -- "1" Content::id
+
+
+hide methods
+@enduml

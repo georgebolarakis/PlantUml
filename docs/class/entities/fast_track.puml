@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam roundcorner 12
+
+entity FastTrack {
+    id
+    manager_id
+    mux_asset_id
+    learning_group_id
+    data
+    status
+    created
+}
+
+hide methods
+@enduml

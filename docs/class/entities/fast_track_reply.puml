@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam roundcorner 12
+
+entity FastTrackReply {
+    id
+    fast_track_id
+    mux_asset_id
+    learner_id
+    status
+    created
+    updated
+}
+
+hide methods
+@enduml

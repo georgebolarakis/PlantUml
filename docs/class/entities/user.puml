@@ -1,0 +1,13 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam roundcorner 12
+
+entity User {
+id
+first_name
+last_name
+phone_number
+}
+
+hide methods
+@enduml

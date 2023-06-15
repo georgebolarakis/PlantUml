@@ -1,0 +1,10 @@
+@startuml
+!include entities/fast_track.puml
+!include entities/fast_track_reply.puml
+!include entities/mux.puml
+
+FastTrack::id                "1" *-- "many" FastTrackReply::fast_track_id
+FastTrack::mux_asset_id      "1" --> "1"    Mux::fast_track_id
+FastTrackReply::mux_asset_id "1" --> "1"    Mux::fast_track_id
+
+@enduml
