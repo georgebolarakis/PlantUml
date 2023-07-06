@@ -12,5 +12,5 @@ entity FastTrack {
     created
 }
 
-hide methods
+
 @enduml
