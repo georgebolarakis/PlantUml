@@ -1,0 +1,51 @@
+@startuml files
+title
+**files.ts**
+Listens for changes in the files collection
+end title
+
+<style>
+header {
+horizontalAlignment right
+fontcolor MediumBlue
+}
+footer {
+horizontalAlignment right
+fontcolor MediumBlue
+}
+</style>
+skinparam backgroundColor #EEEBDC
+skinparam titleBorderRoundCorner 20
+skinparam titleBorderThickness 0.2
+skinparam titleBackgroundColor White
+skinparam titleBorderColor grey
+
+
+allow_mixing
+'header Labrys Tech
+footer Labrys Tech
+database Firestore #Aqua
+
+rectangle "processFileCreation()" as 1 #LightBlue
+rectangle "processFileChange()" as 2 #LightBlue
+rectangle "processFileDeletion()" as 3 #LightBlue
+
+object LanguageCollection#LightGreen{
+  topic: data_languages
+}
+
+object DataLanguageList#LightGreen{
+  topic: data_document
+}
+
+
+Firestore -l-> 1 #line:blue;text:blue : create file/[id]
+1 <--> LanguageCollection #line:green;text:green : initiateDataFetch()
+1 <--> DataLanguageList #line:green;text:green : updateStringLangs()
+Firestore <-l- 1 #line:green;text:green : updates file data
+
+Firestore --> 2 #line:green;text:green : Checks for a change\n in the virus_state
+Firestore <-u- 2 #line:blue;text:blue : Updates virus_state\n in files/tasks/messages\nif a change occured
+Firestore -d-> 3 #line:blue;text:blue : requests\ndeletion of file/[id]\nand thumb[id]
+Firestore <-- 3 #line:green;text:green : Updates db
+@enduml

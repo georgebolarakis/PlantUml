@@ -1,0 +1,102 @@
+@startuml messaging
+
+title Messaging mechanism
+
+skinparam actorStyle Hollow
+skinparam sequence{
+ParticipantBackgroundColor DodgerBlue
+}
+
+actor user  #LightBlue
+participant "Operator App"  #green
+
+database Firestore  as Firestore #Aqua
+
+box "Google Cloud Platform"
+	participant "Cloud Function" 
+    participant Firestore order 05
+end box
+
+
+note right of Firestore
+Agents can not chat to other agents
+If multiple agents are included in a chat group
+they can see eachothers messages.
+Depending on the user_type there will be options
+that are hidden or appear, for instance the notification's tab
+end note
+
+
+
+autonumber
+user [#LightBlue]-> "Operator App" : Sends a message
+"Operator App" [#green]-> Firestore : Logs the messageID in the messages collection
+"Cloud Function"-> "Cloud Function" :**processTaskMessageCreation** Is fired up and the followin operations take place
+"Cloud Function" <--> Firestore : Copies the ops planners,agent coordinators and agents lists from the task\nto the message so they can read it
+"Cloud Function" <--> Firestore : Retrieves environment parameters
+"Cloud Function" <--> Firestore : Retrieves user permissions
+"Cloud Function" <--> Firestore : Retrieves location
+"Cloud Function" <--> Firestore : Checks if user is in the same network/s and updates if necessary
+"Cloud Function" <--> Firestore : Retrieves languages and files and translates them if necessary
+"Cloud Function" <--> Firestore : Updates the fromId data in the contribution collection
+"Cloud Function" <--> Firestore : Updates the task state if the message is a Task update
+
+
+"Cloud Function"  -[#DodgerBlue]-> "Firestore" : The message object getting updated if the database
+Firestore [#Aqua]-> "Operator App" : A notification appears in the notification panel containing the content of the message
+Firestore [#Aqua]-> "Operator App" : A banner appears in the  chat task where it was posted (indicating that there is an unread message)
+
+
+@enduml
+
+
+' package Professional {   
+'     skinparam actorStyle Awesome
+'   actor Chef as c
+'   actor "Food Critic" as fc
+' }
+
+' box "admin"
+'     skinparam actorStyle Awesome
+'     actor Admin
+' end box
+
+@startuml folder_creation
+
+title  Folder Creation
+
+
+skinparam actorStyle awesome
+skinparam sequence{
+ParticipantBackgroundColor DodgerBlue
+}
+
+actor Admin  #blue
+participant "Operator App"  #green
+
+database Firestore  as Firestore #Aqua
+box "Google Cloud Platform"
+	participant "Cloud Function" 
+    participant Firestore order 05
+end box
+
+
+' note top of Admin
+' blabla
+' end note
+
+
+autonumber
+Admin [#blue]-> "Operator App" : Creates a Folder in the UI
+"Operator App" [#green]-> Firestore : The FirebaseFolder class is creating a new Folder Document in Firstore, logging initial data
+"Cloud Function"  <-[#DodgerBlue]-> "Firestore" : Listens for the creation of documents in Firestore
+"Cloud Function"  -[#DodgerBlue]-> "Cloud Function" : **processFolderCreation** is fired that updates the parent that a new folder exists as a descendant
+"Cloud Function"  [#DodgerBlue]-> "Firestore" : New data is logged against the folderUID in Firestore
+"Cloud Function"  <-[#DodgerBlue]-> "Firestore" : Listens for a change in the document in Firestore
+"Cloud Function"  -[#DodgerBlue]-> "Cloud Function" : **processFolderChange** Adds the languages and translates if necessary
+"Cloud Function"  [#DodgerBlue]-> "Firestore" : New data is logged against the folderUID in Firestore
+Firestore [#Aqua]-> "Operator App" : The UI is getting updated with the newly created Folder
+"Operator App" [#green]-> Admin : The Admin is notified about the succesful creation of the Folder
+
+
+@enduml

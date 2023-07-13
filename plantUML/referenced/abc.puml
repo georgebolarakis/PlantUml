@@ -1,0 +1,4 @@
+@startuml abc
+interface Abc #LightGreen{
+  var_name : type
+}

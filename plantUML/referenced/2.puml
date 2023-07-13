@@ -1,0 +1,6 @@
+@startuml 2
+interface 2 #LightGreen{
+  var_name : type
+}
+
+@enduml

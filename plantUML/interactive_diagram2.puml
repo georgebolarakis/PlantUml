@@ -1,0 +1,143 @@
+@startuml Files
+title 
+<u>files
+Several Lines
+here
+here
+end title
+
+<style>
+header {
+horizontalAlignment right
+fontcolor MediumBlue
+}
+footer {
+horizontalAlignment right
+fontcolor MediumBlue
+FontSize 30
+}
+</style>
+skinparam backgroundColor #EEEBDC
+skinparam titleBorderRoundCorner 20
+skinparam titleBorderThickness 0.2
+skinparam titleBackgroundColor White
+skinparam titleBorderColor grey
+
+
+allow_mixing
+'header Labrys Tech
+footer George
+
+    class class1 #LightBlue{
+    value : String
+   
+    }
+
+    !include referenced/1.puml
+   
+
+class1::title <|-- 1
+
+       !include referenced/2.puml 
+
+        map map1#LightBlue {
+            
+            obj => map
+            
+        }
+1  --* map1::title_ 
+class1 "1" --|> "n" map1#line:red     
+
+
+2 -right-> map1 #line:green;  
+
+
+    package package1 #LightGrey{
+        object object1 #LightBlue{
+           some information here
+        }
+
+         package package2 #Azure{
+            1 : [String] 
+            2 : [String] 
+            3 : [String] 
+        }
+
+        
+        package package3 #Azure {
+
+            ' agentcoordinatorsobj  : Array 
+            ' clientsobj : Array 
+            ' opsplannersobj : Array 
+            ' agentsobj : Array    
+          
+
+            map obj #LightBlue{
+                1 => [String]
+                2 => [String]
+                3 => [String]
+                4 => [String]
+            } 
+
+    obj --* map1::obj
+        }
+
+
+
+
+    package package4 #Azure{
+        object object4 #LightBlue{
+            info here
+        }
+
+        map map2 #LightBlue{
+            var => type
+        }
+    }
+
+object1 --|> package2
+object1 --|> package3
+agentcoordinators --* map1
+clients --* map1
+opsplanners --* map1
+
+object4 --|> map2
+map2 --* map1
+    
+}
+
+package package4 #LightGrey{
+
+!include referenced/3.puml
+!include referenced/4.puml
+!include referenced/abc.puml
+
+    
+
+
+    package package5 #Azure{
+    object object6 #LightBlue{
+        Adds the location to an image
+        Line: 106
+    }
+    class class2 #LightBlue{
+    Function object6()
+    }
+    }
+  
+
+class2 "1" --|> "n" object6#line:red
+object6 "1" --* "n" 4#line:blue
+
+4 --* 3
+
+
+
+Abc --* 3
+3 --* map1::exif
+
+ }
+
+
+
+@enduml
